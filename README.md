@@ -10,21 +10,21 @@ https://docs.google.com/document/d/1czwoaHn0FKB0dRzv5Bz-3w-UIRnX_SXm6OeIiee7ff8/
 For /nb_translator:
 
 >{"query":{
-        
-  "description": "(Schizophrenia AND (RestingStateImaging OR RestingStateImagingProtocol)) AND NeurocognitiveTest",
-  "expression": {"and":[
-    {
-      "and": [ 
-        { "or": ["RestingStateImaging", "RestingStateImagingProtocol"] },
-        "Schizophrenia"
-      ]
-    },
-    "NeurocognitiveTest"
-  ]}
-},
-"max_res": 3,
-"min_score": 0.0 
-}
+>        
+>  "description": "(Schizophrenia AND (RestingStateImaging OR RestingStateImagingProtocol)) AND NeurocognitiveTest",
+>  "expression": {"and":[
+>    {
+>      "and": [ 
+>        { "or": ["RestingStateImaging", "RestingStateImagingProtocol"] },
+>        "Schizophrenia"
+>      ]
+>    },
+>    "NeurocognitiveTest"
+>  ]}
+>},
+>"max_res": 3,
+>"min_score": 0.0 
+>}
 
 For /article:
 
