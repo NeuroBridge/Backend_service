@@ -35,12 +35,16 @@ For /article:
   These files are stored in the virtual machine owned by RENCI, be sure to connect to RENCI vpn before going through the following procedure:
   Go to projects/neurobridges/backend_service, then
 
-### Start Solr index serving for the backend:
+### Start and stop Solr index serving for the backend:
   
- Run the following command:
+ For starting, run the following command:
  > solr-8.11.1/bin/solr start
+ For terminating, run the following command:
+ > solr-8.11.1/bin/solr stop
 
 ### Start flask service:
-    Run the following command:
+  For starting, run the following command:
   > nohup flask_service/article_server.py
+  For terminating, run the following command:
+  fuser -n tcp -k 5000
 
