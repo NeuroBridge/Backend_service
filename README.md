@@ -1,5 +1,5 @@
 # Backend_service
-Flask service serving as connection between frontend and Solr index.
+Backend service serving as connection between frontend and Solr index.
 
 ## Description and format of input and output:
 
