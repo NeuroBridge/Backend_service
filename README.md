@@ -38,8 +38,11 @@ For /article:
 ### Start and stop Solr index serving for the backend:
   
  For starting, run the following command:
+ 
  > solr-8.11.1/bin/solr start
+ 
  For terminating, run the following command:
+ 
  > solr-8.11.1/bin/solr stop
 
 ### Start flask service:
