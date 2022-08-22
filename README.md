@@ -43,8 +43,12 @@ For /article:
  > solr-8.11.1/bin/solr stop
 
 ### Start flask service:
+
   For starting, run the following command:
+  
   > nohup flask_service/article_server.py
+  
   For terminating, run the following command:
-  fuser -n tcp -k 5000
+  
+  > fuser -n tcp -k 5000
 
