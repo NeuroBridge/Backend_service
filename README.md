@@ -37,21 +37,30 @@ For /article:
 
 ### Start and stop Solr index serving for the backend:
   
- For starting, run the following command:
+ For starting, enter a new screen (for long-term processes):
  
- > solr-8.11.1/bin/solr start
+ > screen -S solr
+ 
+ run the following command:
+ 
+ > /projects/neurobridges/backend_service/solr-8.11.1/bin/solr start
  
  For terminating, run the following command:
  
- > solr-8.11.1/bin/solr stop
+ > screen -r solr
+ > /projects/neurobridges/backend_service/solr-8.11.1/bin/solr stop
 
 ### Start flask service:
 
-  For starting, run the following command:
+  For starting, enter a new screen (for long-term processes):
+ 
+  > screen -S article
+ 
+  run the following command:
   
-  > nohup flask_service/article_server.py
+  > python /projects/neurobridges/backend_service/flask_service/article_server.py
   
-  For terminating, run the following command:
+  For terminating, go back to the screen (screen -r article):
   
-  > fuser -n tcp -k 5000
+  > Ctrl + C
 
