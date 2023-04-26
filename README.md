@@ -56,9 +56,12 @@ For /article:
  
   > screen -S article
  
-  run the following commands:
-  
+  cd to the flask_service directory
+
   > cd /projects/neurobridges/backend_service/flask_service
+
+  run the following command:
+  
   > python /projects/neurobridges/backend_service/flask_service/article_server.py
   
   For terminating, go back to the screen (screen -r article):
