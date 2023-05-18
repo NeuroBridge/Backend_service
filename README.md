@@ -33,6 +33,9 @@ For /article:
 
 ## Start backend service
   These files are stored in the virtual machine owned by RENCI, be sure to connect to RENCI vpn before going through the following procedure:
+
+  ssh neurobridges-ml.edc.renci.org
+
   Go to projects/neurobridges/backend_service, then
 
 ### Start and stop Solr index serving for the backend:
