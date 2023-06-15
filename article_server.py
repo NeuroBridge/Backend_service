@@ -28,7 +28,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 # create a dictionary for mapping and expanding entities
 
 global onto_dic, onto_parent_dic
-onto = get_ontology("NeuroBridge_093021.owl").load()
+onto = get_ontology("NeuroBridge_032423.owl").load()
 classes = onto.classes()
 onto_dic, onto_parent_dic = {}, {}
 
