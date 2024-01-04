@@ -17,7 +17,6 @@ from owlready2 import *
 import requests
 from flask_cors import CORS, cross_origin
 from dotenv import load_dotenv
-import os
 
 load_dotenv()
 assert(os.environ.get('solr') != None), "Missing solr environment variable"
@@ -96,7 +95,6 @@ def nb_translator():
     q = f"{os.environ.get('solr')}/solr/NB/select?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
     # the query that can be find using a browser:
     interface_q = f"{os.environ.get('solr')}/solr/#/NB/query?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
-    print(interface_q)
     res = requests.get(q)
     output = {'docs':None}
     doc_list = []
