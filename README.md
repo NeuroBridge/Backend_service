@@ -30,6 +30,23 @@ For /article:
 
 >{"pmid": 30098853, "terms": ["Schizophrenia", "NoKnownDisorder"]}
 
+## Start service on Sterling
+Currently, only the Python webapp is configured for deployment to Sterling. The image can be built and pushed to Harbor (see RENCI wiki for setup) with:
+
+**Replace `VERSIONTAG` with the semver version**
+```bash
+docker build . -t containers.renci.org/neurobridges/backend-service:VERSIONTAG
+docker push containers.renci.org/neurobridges/backend-service:VERSIONTAG
+```
+
+The chart can be configured in the [/kubernetes](/kubernetes/) folder, using the [`values.yaml`](/kubernetes/values.yaml) file. To install or upgrade the chart:
+
+```bash
+helm install backend-service kubernetes -n neurobridges
+helm upgrade backend-service kubernetes -n neurobridges
+```
+
+If you update the application, build a new image, change the `image.tag` value to the newest tag, and run the `helm upgrade` command above. 
 
 ## Start backend service
   These files are stored in the virtual machine owned by RENCI, be sure to connect to RENCI vpn before going through the following procedure:

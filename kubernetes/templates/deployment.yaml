@@ -1,65 +1,43 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "neurobridges.fullname" . }}
+  name: {{ .Chart.Name }}
   labels:
-    {{- include "neurobridges.labels" . | nindent 4 }}
+    {{- include "labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
   selector:
     matchLabels:
-      {{- include "neurobridges.selectorLabels" . | nindent 6 }}
+      {{- include "selectorLabels" . | nindent 6 }}
   template:
     metadata:
-      {{- with .Values.podAnnotations }}
-      annotations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
       labels:
-        {{- include "neurobridges.selectorLabels" . | nindent 8 }}
+        {{- include "selectorLabels" . | nindent 8 }}
     spec:
-      {{- with .Values.imagePullSecrets }}
-      imagePullSecrets:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      securityContext:
-        {{- toYaml .Values.podSecurityContext | nindent 8 }}
       containers:
         - name: {{ .Chart.Name }}
-          securityContext:
-            {{- toYaml .Values.securityContext | nindent 12 }}
-          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          image: {{ printf "%s:%s" .Values.image.repository .Values.image.tag }}
+          resources:
+            {{- toYaml .Values.resources | nindent 12 }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
               protocol: TCP
+          env:
+            {{- toYaml .Values.env | nindent 12 }}
           startupProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
+            httpGet:
+              path: /healthz
+              port: http
+            failureThreshold: 30 
             periodSeconds: 10
           livenessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 15
           readinessProbe:
-            tcpSocket:
-              port: 8080
-            initialDelaySeconds: 10
-            periodSeconds: 10
-          resources:
-            {{- toYaml .Values.resources | nindent 12 }}
-      {{- with .Values.nodeSelector }}
-      nodeSelector:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.affinity }}
-      affinity:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      {{- with .Values.tolerations }}
-      tolerations:
-        {{- toYaml . | nindent 8 }}
-      {{- end }}
-      
+            httpGet:
+              path: /healthz
+              port: http
+            periodSeconds: 15

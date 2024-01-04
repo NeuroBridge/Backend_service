@@ -1,40 +1,28 @@
-{{- if .Values.ingress.enabled -}}
-{{- $fullName := include "neurobridges.fullname" . -}}
-{{- $svcPort := .Values.service.port -}}
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: {{ $fullName }}
-  labels:
-    {{- include "neurobridges.labels" . | nindent 4 }}
-  {{- with .Values.ingress.annotations }}
   annotations:
-    {{- toYaml . | nindent 4 }}
-  {{- end }}
+    # This line will automatically generate a Let's Encrypt TLS certificate which will be stored in the secretName below. See https://cert-manager.io/docs/usage/ingress/
+    # This only works for DNS names in public zones like *.renci.org or *.apps.renci.org. See https://wiki.renci.org/index.php/Kubernetes_Cloud/Let%27s_Encrypt_Migration
+    cert-manager.io/cluster-issuer: letsencrypt
+    # Ensure you don't have any "kubernetes.io/ingress.class" annotations; those are deprecated in favor of IngressClasses, but you want to use the default class anyway.
+  name: {{ .Chart.Name }}-ingress
 spec:
-  {{- if .Values.ingress.tls }}
   tls:
-    {{- range .Values.ingress.tls }}
-    - hosts:
-        {{- range .hosts }}
-        - {{ . | quote }}
-        {{- end }}
-      secretName: {{ .secretName }}
-    {{- end }}
-  {{- end }}
+  - hosts:
+      - {{ .Values.ingress.host }}
+    secretName: {{ .Values.ingress.host }}-tls
   rules:
-    {{- range .Values.ingress.hosts }}
-    - host: {{ .host | quote }}
-      http:
-        paths:
-          {{- range .paths }}
-          - path: {{ .path }}
-            pathType: Prefix
-            backend:
-              service:
-                name: {{ $fullName }}
-                port:
-                  number: {{ $svcPort }}
-          {{- end }}
-    {{- end }}
-{{- end }}
+  # This line will automatically create the DNS record using https://github.com/kubernetes-sigs/external-dns/
+  # This only works for hostnames within *.apps.renci.org. If you need a DNS name outside that zone, contact ACIS.
+  - host: {{ .Values.ingress.host }}
+    http:
+      paths:
+      - pathType: Prefix
+        path: "/"
+        backend:
+          service:
+            # The service name and port should match the name and port on your own Kubernetes Service: https://kubernetes.io/docs/concepts/services-networking/service/
+            name: {{ .Chart.Name }}
+            port:
+              number: {{ .Values.service.port }}
