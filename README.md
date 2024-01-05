@@ -38,6 +38,7 @@ Currently, only the Python webapp is configured for deployment to Sterling. The 
 docker build . -t containers.renci.org/neurobridges/backend-service:VERSIONTAG
 docker push containers.renci.org/neurobridges/backend-service:VERSIONTAG
 ```
+*Note that if you're running the container locally to test, you need to be on the RENCI VPN so the app can access the Solr database*
 
 The chart can be configured in the [/kubernetes](/kubernetes/) folder, using the [`values.yaml`](/kubernetes/values.yaml) file. To install or upgrade the chart:
 
