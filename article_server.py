@@ -8,7 +8,7 @@ Created on Wed Mar 30 00:05:46 2022
 
 
 import json
-from flask import Flask, request
+from flask import Flask, request, jsonify
 import nltk
 nltk.download('punkt')
 from nltk.tokenize import word_tokenize
@@ -16,8 +16,10 @@ import sys
 from owlready2 import *
 import requests
 from flask_cors import CORS, cross_origin
+from dotenv import load_dotenv
 
-
+load_dotenv()
+assert(os.environ.get('solr') != None), "Missing solr environment variable"
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "*"}})
@@ -40,8 +42,10 @@ for i in classes:
 #    if i.subclasses():
 #        dic[i.name] += [g.name for g in list(i.subclasses())]
 
-
-
+# A route added for kubernetes
+@app.route("/healthz", methods=["GET"])
+def healthz():
+    return jsonify(""), 200
 
 # show detailed information of NER model's annotation
 @app.route('/article', methods=['GET', 'POST'])
@@ -51,7 +55,7 @@ def article():
     
     query = request.get_json(force=True)
     pmid, terms = query['pmid'], query['terms']
-    q =  "http://neurobridges-ml.edc.renci.org:8983/solr/NB/select?indent=true&q.op=OR&q=pmid%3A%20" + str(pmid)
+    q =  f"{os.environ.get('solr')}/solr/NB/select?indent=true&q.op=OR&q=pmid%3A%20" + str(pmid)
     res = requests.get(q)
     article =  res.json()['response']['docs'][0]
     output = {}
@@ -88,10 +92,9 @@ def nb_translator():
         min_score = 0.0
     front_end_request = request.get_json(force=True)['query']
     targeted_entities = [i for i in onto_dic.keys() if str(front_end_request['expression']).find(i) != -1]
-    q = "http://neurobridges-ml.edc.renci.org:8983/solr/NB/select?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
+    q = f"{os.environ.get('solr')}/solr/NB/select?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
     # the query that can be find using a browser:
-    interface_q = "http://neurobridges-ml.edc.renci.org:8983/solr/#/NB/query?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
-    print(interface_q)
+    interface_q = f"{os.environ.get('solr')}/solr/#/NB/query?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
     res = requests.get(q)
     output = {'docs':None}
     doc_list = []
@@ -152,4 +155,4 @@ def recur(expression):
 
 if __name__=='__main__':
 
-    app.run(host='0.0.0.0',debug=False,port='5000')
+    app.run(host='0.0.0.0',debug=False,port=os.environ.get('port'))

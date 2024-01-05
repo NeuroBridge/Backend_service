@@ -1,0 +1,9 @@
+name: backend-service
+apiVersion: v2
+version: 1.0.0
+type: application
+description: |
+  Backend service controlling the API for the Neurobridge text-mined publications
+maintainers:
+  - name: David Glymph
+    email: dglymph@renci.org
