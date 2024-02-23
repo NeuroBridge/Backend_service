@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: containers.renci.org/neurobridges/backend-service
-  tag: "1.0.0"
+  tag: "1.1.0"
 
 # Use port specified by the webapp container here
 # the external ingress will always use the https port (443/tcp)
