@@ -83,6 +83,45 @@ def nb_translator():
     output['docs'] = doc_list
     return output
 
+# flywheel dataset article return
+@app.route('/flywheel', methods=['GET', 'POST'])
+@cross_origin(origin='*', support_credentials=True)
+def flywheel():
+
+    keys = request.get_json(force=True).keys()
+    if 'query' not in keys:
+        return "Query cannot be empty."
+    if "max_res" in keys:
+        max_res = request.get_json(force=True)['max_res']
+    else:
+        max_res = 100
+    if "min_score" in keys:
+        min_score = request.get_json(force=True)['min_score']
+    else:
+        min_score = 0.0
+
+    front_end_request = request.get_json(force=True)['query']
+    # targeted_entities = [i for i in onto_dic.keys() if str(front_end_request['expression']).find(i) != -1]
+
+    q = f"{os.environ.get('solr')}/solr/flywheel/select?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
+
+    res = requests.get(q)
+    # prepare output documents
+    doc_list = []
+    article_list= res.json()['response']['docs'][:max_res]
+    for i in range(len(article_list)):
+        per_article = article_list[i]
+        if per_article['score'] > min_score:
+            doc = {}
+            # add other fields in future releases
+            doc["id"] = per_article["id"]
+            doc["summary"] = per_article["summary"]
+            doc_list.append(doc)
+
+    output = dict()
+    output['docs'] = doc_list
+    return output
+
 def recur(expression):
     # use recurring algorithm to concatenate terms.
     s = []
