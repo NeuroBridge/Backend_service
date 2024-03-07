@@ -12,7 +12,6 @@ RUN pip3 install -r requirements.txt
 COPY . /app/
 
 ENV port=8080
-ENV solr=http://neurobridges-ml.edc.renci.org:8983
 
 EXPOSE 8080
 
