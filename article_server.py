@@ -103,7 +103,7 @@ def flywheel():
     front_end_request = request.get_json(force=True)['query']
     # targeted_entities = [i for i in onto_dic.keys() if str(front_end_request['expression']).find(i) != -1]
 
-    q = f"{os.environ.get('solr')}/solr/flywheel/select?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
+    q = f"{os.environ.get('solr')}/solr/Flywheel/select?indent=true&q.op=OR&q=NBC%3A%20" + recur(front_end_request['expression']) + "&fl=*,%20score" + "&rows={}".format(max_res)
 
     res = requests.get(q)
     # prepare output documents
